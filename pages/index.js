@@ -16,6 +16,8 @@ import TableCell from "@material-ui/core/TableCell";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
 import AddIcon from "@material-ui/icons/Add";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import {
@@ -24,7 +26,14 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  service: {
+    fontWeight: 300,
+  },
+  users: {
+    marginRight: 0,
+  },
+}));
 
 function createData(
   name,
@@ -60,6 +69,9 @@ const ProjectManager = () => {
   const [name, setName] = useState("");
   const [date, setDate] = useState(new Date());
   const [total, setTotal] = useState("");
+  const [service, setService] = useState("");
+  const [complexity, setComplexity] = useState("");
+  const [users, setUsers] = useState("");
   const [rows, setRows] = useState([
     createData(
       "Zachary Reece",
@@ -219,11 +231,49 @@ const ProjectManager = () => {
                 <Grid item container direction="column" sm>
                   <Grid item>
                     <TextField
+                      fullWidth
                       label="Name"
                       id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    direction="column"
+                    style={{ marginTop: "5em" }}
+                  >
+                    <Grid item>
+                      <Typography variant="h4">Service</Typography>
+                    </Grid>
+                    <Grid item>
+                      <RadioGroup
+                        aria-label="service"
+                        name="service"
+                        value={service}
+                        onChange={(e) => setService(e.target.value)}
+                      >
+                        <FormControlLabel
+                          classes={{ label: classes.service }}
+                          value="Website"
+                          label="Website"
+                          control={<Radio />}
+                        />
+                        <FormControlLabel
+                          classes={{ label: classes.service }}
+                          value="Mobile App"
+                          label="Mobile App"
+                          control={<Radio />}
+                        />
+                        <FormControlLabel
+                          classes={{ label: classes.service }}
+                          value="Custom Software"
+                          label="Custom Software"
+                          control={<Radio />}
+                        />
+                      </RadioGroup>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -233,6 +283,7 @@ const ProjectManager = () => {
                   container
                   direction="column"
                   sm
+                  alignItems="center"
                   style={{ marginTop: 16 }}
                 >
                   <Grid item>
@@ -242,10 +293,55 @@ const ProjectManager = () => {
                       onChange={(newDate) => setDate(newDate)}
                     />
                   </Grid>
+                  <Grid item>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      style={{ marginTop: "5em" }}
+                    >
+                      <Grid item>
+                        <Typography variant="h4">Complexity</Typography>
+                      </Grid>
+                      <Grid item>
+                        <RadioGroup
+                          aria-label="complexity"
+                          name="complexity"
+                          value={complexity}
+                          onChange={(e) => setComplexity(e.target.value)}
+                        >
+                          <FormControlLabel
+                            classes={{ label: classes.service }}
+                            value="Low"
+                            label="Low"
+                            control={<Radio />}
+                          />
+                          <FormControlLabel
+                            classes={{ label: classes.service }}
+                            value="Medium"
+                            label="Medium"
+                            control={<Radio />}
+                          />
+                          <FormControlLabel
+                            classes={{ label: classes.service }}
+                            value="High"
+                            label="High"
+                            control={<Radio />}
+                          />
+                        </RadioGroup>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction="column" sm>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  sm
+                  alignItems="flex-end"
+                >
                   <Grid item>
                     <TextField
                       label="Total"
@@ -258,6 +354,54 @@ const ProjectManager = () => {
                         ),
                       }}
                     />
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      style={{ marginTop: "5em" }}
+                    >
+                      <Grid item>
+                        <Typography variant="h4">Users</Typography>
+                      </Grid>
+                      <Grid item>
+                        <RadioGroup
+                          aria-label="users"
+                          name="users"
+                          value={users}
+                          onChange={(e) => setUsers(e.target.value)}
+                        >
+                          <FormControlLabel
+                            classes={{
+                              label: classes.service,
+                              root: classes.users,
+                            }}
+                            value="0-10"
+                            label="0-10"
+                            control={<Radio />}
+                          />
+                          <FormControlLabel
+                            classes={{
+                              label: classes.service,
+                              root: classes.users,
+                            }}
+                            value="10-100"
+                            label="10-100"
+                            control={<Radio />}
+                          />
+                          <FormControlLabel
+                            classes={{
+                              label: classes.service,
+                              root: classes.users,
+                            }}
+                            value="100+"
+                            label="100+"
+                            control={<Radio />}
+                          />
+                        </RadioGroup>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
