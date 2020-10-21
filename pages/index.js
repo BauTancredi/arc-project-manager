@@ -56,7 +56,8 @@ function createData(
   complexity,
   platforms,
   users,
-  total
+  total,
+  search
 ) {
   return {
     name,
@@ -67,6 +68,7 @@ function createData(
     platforms,
     users,
     total,
+    search,
   };
 }
 
@@ -87,6 +89,7 @@ const ProjectManager = () => {
   const [users, setUsers] = useState("");
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [search, setSearch] = useState("");
   const [rows, setRows] = useState([
     createData(
       "Zachary Reece",
@@ -96,17 +99,19 @@ const ProjectManager = () => {
       "N/A",
       "N/A",
       "N/A",
-      "$1500"
+      "$1500",
+      true
     ),
     createData(
-      "Zachary Reece",
+      "achary Reece",
       "11/2/19",
       "Website",
       "E-Commerce,E-Commerce,E-Commerce,E-Commerce, ",
       "N/A",
       "N/A",
       "N/A",
-      "$1500"
+      "$1500",
+      true
     ),
   ]);
 
@@ -132,7 +137,8 @@ const ProjectManager = () => {
         service === "Website" ? "N/A" : complexity,
         service === "Website" ? "N/A" : platforms.join(", "),
         service === "Website" ? "N/A" : users,
-        `$${total}`
+        `$${total}`,
+        true
       ),
     ]);
     setDialogOpen(false);
@@ -146,6 +152,29 @@ const ProjectManager = () => {
     setFeatures([]);
   };
 
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+
+    const rowData = rows.map((row) =>
+      Object.values(row).filter((option) => option !== true && option !== false)
+    );
+
+    const matches = rowData.map((row) =>
+      row.map((option) =>
+        option.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+    );
+
+    const newRows = [...rows];
+    matches.map((row, index) =>
+      row.includes(true)
+        ? (newRows[index].search = true)
+        : (newRows[index].search = false)
+    );
+
+    setRows(newRows);
+  };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container direction="column">
@@ -156,6 +185,8 @@ const ProjectManager = () => {
           <TextField
             placeholder="Search project details or create a new entry."
             style={{ width: "35em", marginLeft: "5em" }}
+            value={search}
+            onChange={handleChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment
@@ -245,20 +276,22 @@ const ProjectManager = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.service}</TableCell>
-                    <TableCell align="center" style={{ maxWidth: "5em" }}>
-                      {row.features}
-                    </TableCell>
-                    <TableCell align="center">{row.complexity}</TableCell>
-                    <TableCell align="center">{row.platforms}</TableCell>
-                    <TableCell align="center">{row.users}</TableCell>
-                    <TableCell align="center">{row.total}</TableCell>
-                  </TableRow>
-                ))}
+                {rows
+                  .filter((row) => row.search)
+                  .map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.date}</TableCell>
+                      <TableCell align="center">{row.service}</TableCell>
+                      <TableCell align="center" style={{ maxWidth: "5em" }}>
+                        {row.features}
+                      </TableCell>
+                      <TableCell align="center">{row.complexity}</TableCell>
+                      <TableCell align="center">{row.platforms}</TableCell>
+                      <TableCell align="center">{row.users}</TableCell>
+                      <TableCell align="center">{row.total}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
