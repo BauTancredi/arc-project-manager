@@ -20,6 +20,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import {
@@ -27,6 +28,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   service: {
@@ -34,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
   },
   users: {
     marginRight: 0,
+  },
+  button: {
+    color: "#fff",
+    backgroundColor: theme.palette.common.orange,
+    borderRadius: 50,
+    textTransform: "none",
+    "$:hover": {
+      backgroundColor: theme.palette.secondary.light,
+    },
   },
 }));
 
@@ -101,13 +112,38 @@ const ProjectManager = () => {
 
   const platformOptions = ["Web", "iOS", "Andriod"];
   const featureOptions = [
-    "Phjoto/Video",
+    "Photo/Video",
     "GPS",
     "File Transfer",
     "User/Authentication",
     "Biometrics",
     "Push Notifications",
   ];
+
+  const addProject = () => {
+    setRows([
+      ...rows,
+      createData(
+        name,
+        format(date, "MM/dd/yy"),
+        service,
+        features.join(", "),
+        complexity,
+        platforms.join(", "),
+        users,
+        total
+      ),
+    ]);
+    setDialogOpen(false);
+    setName("");
+    setDate(new Date());
+    setTotal("");
+    setService("");
+    setComplexity("");
+    setUsers("");
+    setPlatforms([]);
+    setFeatures([]);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -375,7 +411,7 @@ const ProjectManager = () => {
                       label="Total"
                       id="total"
                       value={total}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setTotal(e.target.value)}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">$</InputAdornment>
@@ -383,12 +419,11 @@ const ProjectManager = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item style={{ alignSelf: "flex-end" }}>
                     <Grid
                       item
                       container
                       direction="column"
-                      alignItems="flex-end"
                       style={{ marginTop: "5em" }}
                     >
                       <Grid item>
@@ -430,34 +465,67 @@ const ProjectManager = () => {
                           />
                         </RadioGroup>
                       </Grid>
-                      <Grid item style={{ marginTop: "5em" }}>
-                        <Select
-                          style={{ width: "12em" }}
-                          MenuProps={{
-                            style: {
-                              zIndex: 1302,
-                            },
-                          }}
-                          labelId="features"
-                          id="features"
-                          multiple
-                          renderValue={
-                            features.length > 0 ? undefined : () => "Features"
-                          }
-                          displayEmpty
-                          value={features}
-                          onChange={(e) => setFeatures(e.target.value)}
-                        >
-                          {featureOptions.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item style={{ marginTop: "5em" }}>
+                    <Select
+                      style={{ width: "12em" }}
+                      MenuProps={{
+                        style: {
+                          zIndex: 1302,
+                        },
+                      }}
+                      labelId="features"
+                      id="features"
+                      multiple
+                      renderValue={
+                        features.length > 0 ? undefined : () => "Features"
+                      }
+                      displayEmpty
+                      value={features}
+                      onChange={(e) => setFeatures(e.target.value)}
+                    >
+                      {featureOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
                 </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justify="center" style={{ marginTop: "3em" }}>
+              <Grid item>
+                <Button
+                  color="primary"
+                  style={{ fontWeight: 300 }}
+                  onClick={() => setDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={addProject}
+                  disabled={
+                    service === "Website"
+                      ? name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0
+                      : name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0 ||
+                        users.length === 0 ||
+                        complexity.length === 0 ||
+                        platforms.length === 0 ||
+                        service.length === 0
+                  }
+                >
+                  Add Project +
+                </Button>
               </Grid>
             </Grid>
           </DialogContent>
