@@ -92,6 +92,7 @@ const ProjectManager = () => {
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = React.useState(0);
   const [rows, setRows] = useState([
     createData(
       "Zachary Reece",
@@ -175,6 +176,7 @@ const ProjectManager = () => {
     );
 
     setRows(newRows);
+    setPage(0);
   };
 
   return (
@@ -254,16 +256,8 @@ const ProjectManager = () => {
             ></FormControlLabel>
           </FormGroup>
         </Grid>
-        <Grid item container justify="flex-end" style={{ marginTop: "5em" }}>
-          <Grid item style={{ marginRight: 75 }}>
-            <FilterListIcon
-              color="secondary"
-              style={{ fontSize: 50 }}
-            ></FilterListIcon>
-          </Grid>
-        </Grid>
-        <Grid item style={{ marginBottom: "15em" }}>
-          <EnhancedTable rows={rows} />
+        <Grid item style={{ marginTop: "5em", marginBottom: "35em" }}>
+          <EnhancedTable rows={rows} page={page} setPage={setPage} />
         </Grid>
         <Dialog
           open={dialogOpen}
