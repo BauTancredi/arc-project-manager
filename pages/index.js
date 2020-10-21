@@ -111,7 +111,7 @@ const ProjectManager = () => {
   ]);
 
   const platformOptions = ["Web", "iOS", "Andriod"];
-  const featureOptions = [
+  let featureOptions = [
     "Photo/Video",
     "GPS",
     "File Transfer",
@@ -119,6 +119,7 @@ const ProjectManager = () => {
     "Biometrics",
     "Push Notifications",
   ];
+  let websiteOptions = ["Basic", "Interactive", "E-Commerce"];
 
   const addProject = () => {
     setRows([
@@ -128,10 +129,10 @@ const ProjectManager = () => {
         format(date, "MM/dd/yy"),
         service,
         features.join(", "),
-        complexity,
-        platforms.join(", "),
-        users,
-        total
+        service === "Website" ? "N/A" : complexity,
+        service === "Website" ? "N/A" : platforms.join(", "),
+        service === "Website" ? "N/A" : users,
+        `$${total}`
       ),
     ]);
     setDialogOpen(false);
@@ -302,7 +303,10 @@ const ProjectManager = () => {
                         aria-label="service"
                         name="service"
                         value={service}
-                        onChange={(e) => setService(e.target.value)}
+                        onChange={(e) => {
+                          setService(e.target.value);
+                          setFeatures([]);
+                        }}
                       >
                         <FormControlLabel
                           classes={{ label: classes.service }}
@@ -326,6 +330,7 @@ const ProjectManager = () => {
                     </Grid>
                     <Grid item style={{ marginTop: "5em" }}>
                       <Select
+                        disabled={service === "Website"}
                         style={{ width: "12em" }}
                         labelId="platforms"
                         id="platforms"
@@ -381,18 +386,21 @@ const ProjectManager = () => {
                           onChange={(e) => setComplexity(e.target.value)}
                         >
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="Low"
                             label="Low"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="Medium"
                             label="Medium"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="High"
                             label="High"
@@ -437,6 +445,7 @@ const ProjectManager = () => {
                           onChange={(e) => setUsers(e.target.value)}
                         >
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{
                               label: classes.service,
                               root: classes.users,
@@ -446,6 +455,7 @@ const ProjectManager = () => {
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{
                               label: classes.service,
                               root: classes.users,
@@ -455,6 +465,7 @@ const ProjectManager = () => {
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{
                               label: classes.service,
                               root: classes.users,
@@ -485,6 +496,9 @@ const ProjectManager = () => {
                       value={features}
                       onChange={(e) => setFeatures(e.target.value)}
                     >
+                      {service === "Website"
+                        ? (featureOptions = websiteOptions)
+                        : null}
                       {featureOptions.map((option) => (
                         <MenuItem key={option} value={option}>
                           {option}
@@ -514,7 +528,8 @@ const ProjectManager = () => {
                     service === "Website"
                       ? name.length === 0 ||
                         total.length === 0 ||
-                        features.length === 0
+                        features.length === 0 ||
+                        features.length > 1
                       : name.length === 0 ||
                         total.length === 0 ||
                         features.length === 0 ||
