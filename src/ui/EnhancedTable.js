@@ -325,6 +325,49 @@ export default function EnhancedTable(props) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
+  const switchFilters = () => {
+    const {
+      websiteChecked,
+      iOSChecked,
+      androidChecked,
+      softwareChecked,
+    } = props;
+
+    const websites = props.rows.filter((row) =>
+      websiteChecked ? row.service === "Website" : null
+    );
+
+    const iOSApps = props.rows.filter((row) =>
+      iOSChecked ? row.platforms.includes("iOS") : null
+    );
+
+    const androidApps = props.rows.filter((row) =>
+      androidChecked ? row.platforms.includes("Android") : null
+    );
+
+    const softwareApps = props.rows.filter((row) =>
+      softwareChecked ? row.service === "Custom Software" : null
+    );
+
+    if (!websiteChecked && !iOSChecked && !androidChecked && !softwareChecked) {
+      return props.rows;
+    } else {
+      let newRows = websites.concat(
+        iOSApps.filter((item) => websites.indexOf(item) < 0)
+      );
+
+      let newRowsTwo = newRows.concat(
+        androidApps.filter((item) => newRows.indexOf(item) < 0)
+      );
+
+      let newRowsThree = newRowsTwo.concat(
+        softwareApps.filter((item) => newRowsTwo.indexOf(item) < 0)
+      );
+
+      return newRowsThree;
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
@@ -353,7 +396,7 @@ export default function EnhancedTable(props) {
             />
             <TableBody>
               {stableSort(
-                props.rows.filter((row) => row.search),
+                switchFilters().filter((row) => row.search),
                 getComparator(order, orderBy)
               )
                 .slice(
