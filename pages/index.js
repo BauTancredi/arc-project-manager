@@ -257,7 +257,12 @@ const ProjectManager = () => {
           </FormGroup>
         </Grid>
         <Grid item style={{ marginTop: "5em", marginBottom: "35em" }}>
-          <EnhancedTable rows={rows} page={page} setPage={setPage} />
+          <EnhancedTable
+            setRows={setRows}
+            rows={rows}
+            page={page}
+            setPage={setPage}
+          />
         </Grid>
         <Dialog
           open={dialogOpen}
